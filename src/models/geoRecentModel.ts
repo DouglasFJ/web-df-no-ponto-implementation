@@ -14,3 +14,5 @@ interface LinhaGeo {
         id_operadora: number
     }
 }
+
+export type {GeoRecent, LinhaGeo}
