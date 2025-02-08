@@ -1,41 +1,45 @@
 'use client'
 import Image from "next/image";
-import maplibregl from 'maplibre-gl';
+import maplib from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
-import { useEffect } from "react";
-import axios from "axios";
+import { useEffect, useState } from "react";
+import Map, { useMap } from "@/components/Map";
+import SearchComponent from "@/components/shared/SearchComponent";
+import { buscarGeoOnibus } from "@/services/busApiService";
 
 export default function Home() {
-  let busCode = '0.761'
+  const mapOptions: maplib.MapOptions = {
+    container: 'map',
+    style: process.env.NEXT_PUBLIC_MAPTILER_STYLE,
+    center: [-47.808723, -15.788950], 
+    zoom: 11 
+  }
 
+  const [linhaBus, setLinhaBus] = useState('')
+  const map = useMap(mapOptions)
+  
   useEffect(() => {
-    const map = new maplibregl.Map({
-      container: 'map', 
-      style: 'https://api.maptiler.com/maps/streets/style.json?key=get_your_own_OpIi9ZULNHzrESv6T2vL',
-      center: [-47.808723, -15.788950], 
-      zoom: 11 
-    });
-    map.resize()
-
-    let res = axios.get(`https://www.sistemas.dftrans.df.gov.br/gps/linha/${busCode}/geo/recent`)
-    
-    const mark = new maplibregl.Marker()
-    
-    res.then((ar)=>{
-      mark.setLngLat(ar.data.features[0].geometry.coordinates)
-      mark.addTo(map)
-    })
-  }, [])
-
-
+    if (linhaBus && map) {
+      buscarGeoOnibus(linhaBus).then(geoR => {
+        const marker = new maplib.Marker()
+        marker.setLngLat(geoR.features[0].geometry.coordinates)
+        marker.addTo(map)
+      })
+    }
+  }, [linhaBus])
 
   return (
-    <div className="h-screen p-4">
-      <h1 className="">MAP</h1>
+    <div className="h-screen w-screen relative flex flex-col">
+      <header className="w-full h-24 p-5 flex justify-between items-center">
+        <h1>Web Df No Ponto</h1>
+        <SearchComponent setLinha={setLinhaBus}/>
+      </header>
 
-      <div className="justify-center">
-        <div id="map" className="map">
-        </div>
+      <div className="p-5 flex-1">
+        <Map 
+          className="map"
+          mapOptions={mapOptions}
+        />
       </div>
 
     </div>
