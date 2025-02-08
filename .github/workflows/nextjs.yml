@@ -75,6 +75,9 @@ jobs:
         run: ${{ steps.detect-package-manager.outputs.manager }} ${{ steps.detect-package-manager.outputs.command }}
       - name: Build with Next.js
         run: ${{ steps.detect-package-manager.outputs.runner }} next build
+        env:
+          NEXT_PUBLIC_MAPTILER_STYLE: ${{secrets.NEXT_PUBLIC_MAPTILER_STYLE}}
+          NEXT_PUBLIC_API_DF_NO_PONTO: ${{secrets.NEXT_PUBLIC_API_DF_NO_PONTO}}
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
@@ -91,3 +94,6 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+        env:
+          NEXT_PUBLIC_MAPTILER_STYLE: ${{secrets.NEXT_PUBLIC_MAPTILER_STYLE}}
+          NEXT_PUBLIC_API_DF_NO_PONTO: ${{secrets.NEXT_PUBLIC_API_DF_NO_PONTO}}
