@@ -1,4 +1,4 @@
-import React, { ChangeEvent, Dispatch, SetStateAction, useState } from "react";
+import React, { ChangeEvent, useState } from "react";
 
 interface SearchProps {
     setLinha: any

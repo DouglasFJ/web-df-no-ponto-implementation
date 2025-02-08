@@ -1,5 +1,4 @@
 'use client'
-import Image from "next/image";
 import maplib from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import { useEffect, useState } from "react";
